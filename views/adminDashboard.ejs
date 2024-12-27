@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Attendance system</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/dark.css"
+    />
+    <link rel="stylesheet" href="/adminStyle.css" />
+  </head>
+  <body>
+    <nav>
+      <button id="logout-button">Logout</button>
+    </nav>
+    <div class="adder-form">
+      <form class="input-validation-required add-new-faculty">
+        <center><h3>Add New Faculty</h3></center>
+        <sl-input
+          name="fname"
+          class="fname"
+          label="Faculty Name"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <br />
+        <sl-select label="Select Deparmetn" class="dprt-input-wrapper">
+        </sl-select>
+        <br />
+        <sl-input
+          name="fid"
+          class="fid"
+          label="Faculty ID"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <br />
+        <sl-input
+          type="password"
+          name="fpass"
+          class="fpass"
+          password-toggle
+          label="Faculty Passowrd"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <br />
+        <br />
+        <sl-button type="submit" class="submit-new-faculty" variant="primary"
+          >Submit</sl-button
+        >
+      </form>
+      <form class="input-validation-required add-new-stduent">
+        <center><h3>Add New Student</h3></center>
+
+        <sl-input
+          name="sname"
+          label="Student Name"
+          class="sname"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <br />
+        <div>
+          <sl-select label="Select Class" class="class-input-wrapper">
+          </sl-select>
+        </div>
+        <br />
+        <sl-input
+          name="sid"
+          label="Student ID"
+          autocomplete="off"
+          class="sid"
+          required
+        ></sl-input>
+        <br />
+        <sl-input
+          name="spass"
+          type="password"
+          password-toggle
+          class="spass"
+          label="Student Passowrd"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <br />
+        <br />
+        <sl-button type="submit" variant="primary">Submit</sl-button>
+      </form>
+      <form class="input-validation-required add-new-fac-to-course">
+        <center><h3>Assign Faculty to course</h3></center>
+        <div>
+          <sl-select label="Select Faculty" class="faculty-input-wrapper">
+          </sl-select>
+        </div>
+        <br />
+        <div>
+          <sl-select label="Select Course" class="course-input-wrapper">
+          </sl-select>
+        </div>
+        <br />
+        <div>
+          <sl-select label="Select Class" class="class-input-wrapper">
+          </sl-select>
+        </div>
+        <br />
+        <br />
+        <sl-button type="submit" variant="primary">Submit</sl-button>
+      </form>
+      <form
+        class="add-new-std-course input-validation-required"
+        style="width: 500px"
+      >
+        <center><h3>Add Student to Courses</h3></center>
+        <div class="">
+          <br />
+          <sl-select
+            label="Select Department"
+            class="dprt-input-wrapper dynamic-dprt"
+          >
+          </sl-select>
+        </div>
+        <br />
+        <div class="">
+          <sl-select label="Select class" class="dynamic-classes">
+          </sl-select>
+        </div>
+        <br />
+        <sl-select
+          label="Select Students"
+          style="min-width: 250px"
+          multiple
+          class="std-list-input-wrapper dynamic-students"
+          clearable
+        > 
+        </sl-select>
+        <br />
+        <div>
+          <sl-select
+            multiple
+            clearable
+            label="Select Course"
+            class="course-input-wrapper dynamic-courses"
+            style="min-width: 450px"
+          >
+          </sl-select>
+        </div>
+        <br /><br />
+        <sl-button type="submit" variant="primary">Submit</sl-button>
+      </form>
+    </div>
+    <!-- <div id="profile-info"></div> -->
+    <script src="/adminScript.js"></script>
+  </body>
+</html>

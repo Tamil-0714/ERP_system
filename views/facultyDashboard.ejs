@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/dark.css"
+    />
+    <link rel="stylesheet" href="/facultyStyle.css" />
+  </head>
+  <body>
+    <sl-tab-group>
+      <sl-tab slot="nav" panel="home">Home</sl-tab>
+      <sl-tab slot="nav" panel="attendance">Attendance</sl-tab>
+      <sl-tab slot="nav" panel="timeTable">Update Time Table</sl-tab>
+      <sl-tab slot="nav" id="logout-button" panel="none">Log out</sl-tab>
+
+      <sl-tab-panel name="home">
+        <div class="card-grid-wrapper">
+          <div class="id-card" style="margin-left: 10px">
+            <h1>Faculty Profile</h1>
+            <table>
+              <tr>
+                <td>ID</td>
+                <td><%= profile.id %></td>
+              </tr>
+              <tr>
+                <td>Name</td>
+                <td><%= profile.name %></td>
+              </tr>
+              <tr>
+                <td>Department</td>
+                <td>Chemistry</td>
+              </tr>
+              <tr>
+                <td>Handling Course</td>
+                <td>
+                  <div class="scrollable-content">
+                    <% facToCourse?.forEach(function(item, i) { %>
+                    <span><%= (i+1)+". " %> <%=item.course_name %></span> <br />
+                    <% }) %>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="time-table-schedule-wrapper">
+            <table class="schedule-container">
+              <thead>
+                <tr>
+                  <th colspan="6" style="background-color: rgb(56, 56, 56)">
+                    Time Table
+                  </th>
+                </tr>
+                <tr>
+                  <th>X</th>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% const days = ['A', 'B', 'C', 'D', 'E', 'F']; %> <%
+                days.forEach(day => { %>
+                <tr>
+                  <td class="day-order"><%= day %></td>
+                  <% for (let hour = 1; hour <= 5; hour++) { %> <% const entry =
+                  schedule.find(e => e.day_order === day && e.hour == hour); %>
+                  <% if (entry && entry.course_id && entry.class_id) { %>
+                  <td class="subject">
+                    <%= getCourseName(entry.course_id) %><br />
+                    <%= getClassName(entry.class_id) %><br />
+                  </td>
+
+                  <% } else { %>
+                  <td></td>
+                  <% } %> <% } %>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sl-tab-panel>
+      <sl-tab-panel name="attendance">
+        <div class="panel-attend">
+          <div class="attendacne-dropdown-wrapper">
+            <div class="day-order-dropdown">
+              <sl-select
+                placeholder="select Day order"
+                class="day-order-input"
+                style="width: 200px"
+              >
+                <sl-option value="a">a</sl-option>
+                <sl-option value="b">b</sl-option>
+                <sl-option value="c">c</sl-option>
+                <sl-option value="d">d</sl-option>
+                <sl-option value="e">e</sl-option>
+                <sl-option value="f">f</sl-option>
+              </sl-select>
+            </div>
+            <div class="hour-dropdown">
+              <sl-select
+                placeholder="select Day order"
+                class="hour-input"
+                style="width: 200px"
+              >
+                <sl-option value="1">First</sl-option>
+                <sl-option value="2">Second</sl-option>
+                <sl-option value="3">Third</sl-option>
+                <sl-option value="4">Fourth</sl-option>
+                <sl-option value="5">Fifth</sl-option>
+              </sl-select>
+            </div>
+            <div class="get-attendrigis-btn">
+              <sl-button variant="primary" class="btn-get-attend">Get Register Numbers</sl-button>
+            </div>
+          </div>
+          <div class="attendance-wrapper">
+            <div class="top-container">
+              <h2 class="sec-class">Class Not definded</h2>
+              <h3 class="course-name">Course Not definded</h3>
+              <h3 class="date-time"></h3>
+            </div>
+            <div class="grid-container"></div>
+            <div class="btn-container">
+              <button class="btn-clr btn-ab">Clear Selection</button>
+              <button class="btn-submit btn-ab-submit btn-ab">
+                Submit absentees
+              </button>
+            </div>
+          </div>
+        </div>
+      </sl-tab-panel>
+      <sl-tab-panel name="timeTable">
+        <div class="wrapper">
+          <center><h2>Time Table</h2></center>
+          <div class="container">
+            <!-- Top Labels -->
+            <div class="label label-top"></div>
+            <% for (let hour = 1; hour <= 5; hour++) { %>
+            <div class="label label-top"><%= hour %> Hour</div>
+            <% } %>
+            <!-- Left Labels and Grid -->
+            <% const rows = ['A order', 'B order', 'C order', 'D order',
+            'Eorder', 'F order']; %> <% rows.forEach(function(row) { %>
+            <div class="label label-left"><%= row %></div>
+            <% for (let col = 1; col <= 5; col++) { %>
+            <div class="cell">
+              <select name="" id="schedule-drop-down">
+                <option value="">Not assigned</option>
+                <% facToCourse?.forEach(function(item) { %>
+                <option value="<%= item.course_id %>,<%= item.class_id %>">
+                  <%= item.course_name %> -> <%= item.class_name %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+            <% } %> <% }) %>
+          </div>
+          <div class="time-table-footer">
+            <div class="btn-wrapper" style="float: right; margin-top: 10px">
+              <sl-button variant="success" type="button" class="update-tt-btn"
+                >Update Time Table</sl-button
+              >
+            </div>
+          </div>
+        </div>
+      </sl-tab-panel>
+      <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
+    </sl-tab-group>
+
+    <script src="/facultyScript.js"></script>
+  </body>
+</html>
