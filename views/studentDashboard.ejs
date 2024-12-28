@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/dark.css"
+    />
+    <link rel="stylesheet" href="/studentStyle.css" />
+  </head>
+  <body>
+    <nav class="top-wrapper">
+      <sl-button variant="danger" id="logout-button">Logout</sl-button>
+    </nav>
+    <main>
+      <div class="profile-container" style="margin-left: 30px">
+        <h1>Faculty Profile</h1>
+        <table>
+          <tr>
+            <td>ID</td>
+            <td><%= profile.id %></td>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td><%= profile.name %></td>
+          </tr>
+          <tr>
+            <td>Department</td>
+            <td><%= profile.department %></td>
+          </tr>
+          <tr>
+            <td>Course Enroled</td>
+            <td>
+              <div class="scrollable-content">
+                <% profile.courses?.forEach(function(item, i) { %>
+                <span><%= (i+1)+". " %> <%=item.course_name %></span> <br />
+                <% }) %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="attendance-container">
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Day Order</th>
+              <th>H1</th>
+              <th>H2</th>
+              <th>H3</th>
+              <th>H4</th>
+              <th>H5</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+            const groupedData = attendanceData.reduce((acc, record) => {
+              const key = `${record.date}-${record.day_order}`;
+              if (!acc[key]) {
+                acc[key] = { date: record.date, day_order: record.day_order, hours: {} };
+              }
+              acc[key].hours[record.hour] = record.attendance_status;
+              return acc;
+            }, {});
+  
+            Object.values(groupedData).forEach(({ date, day_order, hours }) => {
+          %>
+          <tr>
+            <td><%= new Date(date).toLocaleDateString('en-GB') %></td>
+            <td><%= day_order %></td>
+            <td><%= hours[1] || '-' %></td>
+            <td><%= hours[2] || '-' %></td>
+            <td><%= hours[3] || '-' %></td>
+            <td><%= hours[4] || '-' %></td>
+            <td><%= hours[5] || '-' %></td>
+          </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <script src="/studentDashboard.js"></script>
+  </body>
+</html>

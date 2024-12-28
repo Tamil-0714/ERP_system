@@ -161,6 +161,18 @@ async function fetchFacultyAssignedCourse(faculty_id) {
   }
 }
 
+async function fetchStudentAssignedCourse(studentId) {
+  try {
+    const query =
+      "SELECT * FROM course WHERE course_id in (SELECT course_id from course_enrolled where student_id = ?)";
+    const params = [studentId];
+    const rows = await queryDB(query, params);
+    return rows;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function insertStdToCourse(studnetId, courseId) {
   try {
     const query = `INSERT INTO course_enrolled VALUES(?, ?)`;
@@ -174,6 +186,19 @@ async function insertStdToCourse(studnetId, courseId) {
 
 async function insertAttendance(date, hour, dayOrder, stdId, attenSts) {
   try {
+    const getOldDataQuery =
+      "SELECT * FROM attendance WHERE date = ? AND hour = ? AND day_order = ? AND student_id = ?";
+    const getOldDataParam = [date, hour, dayOrder, stdId];
+    const oldRows = await queryDB(getOldDataQuery, getOldDataParam);
+    if (oldRows[0] && oldRows[0].attendance_status !== attenSts) {
+      const newQuery =
+        "UPDATE attendance SET attendance_status = ? WHERE attendance_id = ?";
+      const params = [attenSts, oldRows[0].attendance_id];
+      const rows = await queryDB(newQuery, params);
+      return rows;
+    } else if (oldRows[0]) {
+      return [{}];
+    }
     const query = `INSERT INTO attendance (hour, day_order, date, student_id, attendance_status) VALUES (?, ?, ?, ?, ?)`;
     const params = [hour, dayOrder, date, stdId, attenSts];
     const rows = await queryDB(query, params);
@@ -228,6 +253,16 @@ async function getClassForAttend(facultyId, dayOrder, hour) {
     console.error(error);
   }
 }
+async function fetchStudentAttendance(studentId) {
+  try {
+    const query = "SELECT * FROM `attendance` WHERE student_id = ?";
+    const params = [studentId];
+    const rows = await queryDB(query, params);
+    return rows;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 module.exports = {
   fetchCred,
@@ -247,4 +282,6 @@ module.exports = {
   insertStdToCourse,
   getStsIdForAttend,
   getClassForAttend,
+  fetchStudentAssignedCourse,
+  fetchStudentAttendance,
 };

@@ -9,6 +9,7 @@ const {
   adminLogged,
   ensureFacultyAuthenticated,
   facultyLogged,
+  studentLogged,
 } = require("./middleware/middleware");
 const studentProfile = require("./routes/studentProfileRoute");
 const {
@@ -28,6 +29,8 @@ const {
   insertStdToCourse,
   getStsIdForAttend,
   getClassForAttend,
+  fetchStudentAssignedCourse,
+  fetchStudentAttendance,
 } = require("./DB/db");
 const handleLogin = require("./routes/loginRoute");
 
@@ -352,7 +355,43 @@ app.get(
   }
 );
 
-app.get("/student/dashboard", ensureStudentAuthenticated, studentProfile);
+app.get("/student/login", studentLogged, async (req, res) => {
+  res.render("studentLogin", { style: undefined });
+});
+
+app.post("/student/login", async (req, res) => {
+  const { userName, password } = req.body;
+  if (userName && password) {
+    await handleLogin(userName, password, "student", async (result) => {
+      if (result) {
+        req.session.user = { userName, role: "student" };
+        return res.redirect("/student/dashboard");
+      } else {
+        return res.render("studentLogin", { style: "border: 1px solid red;" });
+      }
+    });
+  } else {
+    return res.render("studentLogin", { style: "border: 1px solid red;" });
+  }
+});
+
+app.get("/student/dashboard", ensureStudentAuthenticated, async (req, res) => {
+  try {
+    const pageData = {
+      profile: {
+        id: req.session.user.userName,
+        name: "Innum vaikala",
+        department: "computer science",
+        courses: await fetchStudentAssignedCourse(req.session.user.userName),
+      },
+      attendanceData: await fetchStudentAttendance(req.session.user.userName),
+    };
+    console.log(pageData.attendanceData);
+    res.render("studentDashboard", pageData);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 const fetchDataAndRespond = async (res, fetchFunction, notFoundMessage) => {
   try {

@@ -20,6 +20,13 @@ function facultyLogged(req, res, next) {
     return next();
   }
 }
+function studentLogged(req, res, next) {
+  if (req?.session?.user?.role === "student") {
+    return res.redirect("/student/dashboard");
+  } else {
+    return next();
+  }
+}
 function ensureFacultyAuthenticated(req, res, next) {
   if (req?.session?.user?.role === "faculty") {
     return next();
@@ -40,4 +47,5 @@ module.exports = {
   ensureStudentAuthenticated,
   adminLogged,
   facultyLogged,
+  studentLogged,
 };
