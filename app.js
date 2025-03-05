@@ -31,6 +31,7 @@ const {
   getClassForAttend,
   fetchStudentAssignedCourse,
   fetchStudentAttendance,
+  fetchAbsentCount,
 } = require("./DB/db");
 const handleLogin = require("./routes/loginRoute");
 
@@ -339,7 +340,7 @@ app.get(
     const pageData = {
       facToCourse,
       profile: {
-        name: "ipothaiku vaikal",
+        name: "Name not set",
         id: req.session.user.userName,
       },
 
@@ -383,6 +384,7 @@ app.get("/student/dashboard", ensureStudentAuthenticated, async (req, res) => {
         name: "Innum vaikala",
         department: "computer science",
         courses: await fetchStudentAssignedCourse(req.session.user.userName),
+        absent: await fetchAbsentCount(req.session.user.userName),
       },
       attendanceData: await fetchStudentAttendance(req.session.user.userName),
     };

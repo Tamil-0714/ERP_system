@@ -48,6 +48,20 @@
               </div>
             </td>
           </tr>
+          <tr>
+            <td>Absent</td>
+            <td>
+              <div class="scrollable-content">
+                <span><%=profile.absent[0].abc %></span> <br />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Medical Leave</td>
+            <td>
+              <div class="scrollable-content"><span>0.0</span> <br /></div>
+            </td>
+          </tr>
         </table>
       </div>
       <div class="attendance-container">
@@ -64,28 +78,22 @@
             </tr>
           </thead>
           <tbody>
-            <% 
-            const groupedData = attendanceData.reduce((acc, record) => {
-              const key = `${record.date}-${record.day_order}`;
-              if (!acc[key]) {
-                acc[key] = { date: record.date, day_order: record.day_order, hours: {} };
-              }
-              acc[key].hours[record.hour] = record.attendance_status;
-              return acc;
-            }, {});
-  
-            Object.values(groupedData).forEach(({ date, day_order, hours }) => {
-          %>
-          <tr>
-            <td><%= new Date(date).toLocaleDateString('en-GB') %></td>
-            <td><%= day_order %></td>
-            <td><%= hours[1] || '-' %></td>
-            <td><%= hours[2] || '-' %></td>
-            <td><%= hours[3] || '-' %></td>
-            <td><%= hours[4] || '-' %></td>
-            <td><%= hours[5] || '-' %></td>
-          </tr>
-          <% }) %>
+            <% const groupedData = attendanceData.reduce((acc, record) => {
+            const key = `${record.date}-${record.day_order}`; if (!acc[key]) {
+            acc[key] = { date: record.date, day_order: record.day_order, hours:
+            {} }; } acc[key].hours[record.hour] = record.attendance_status;
+            return acc; }, {}); Object.values(groupedData).forEach(({ date,
+            day_order, hours }) => { %>
+            <tr>
+              <td><%= new Date(date).toLocaleDateString('en-GB') %></td>
+              <td><%= day_order %></td>
+              <td><%= hours[1] || '-' %></td>
+              <td><%= hours[2] || '-' %></td>
+              <td><%= hours[3] || '-' %></td>
+              <td><%= hours[4] || '-' %></td>
+              <td><%= hours[5] || '-' %></td>
+            </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>

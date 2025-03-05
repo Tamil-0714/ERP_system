@@ -94,6 +94,8 @@ async function fetchFaculty() {
     const query = `SELECT * FROM faculty`;
     const params = [];
     const rows = await queryDB(query, params);
+    console.log("this is rwos of faculty", rows);
+
     return rows;
   } catch (error) {
     console.error(error);
@@ -165,6 +167,17 @@ async function fetchStudentAssignedCourse(studentId) {
   try {
     const query =
       "SELECT * FROM course WHERE course_id in (SELECT course_id from course_enrolled where student_id = ?)";
+    const params = [studentId];
+    const rows = await queryDB(query, params);
+    return rows;
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function fetchAbsentCount(studentId) {
+  try {
+    const query =
+      "SELECT COUNT(attendance_id) as abc FROM attendance WHERE student_id = ? AND attendance_status = 'A'";
     const params = [studentId];
     const rows = await queryDB(query, params);
     return rows;
@@ -284,4 +297,5 @@ module.exports = {
   getClassForAttend,
   fetchStudentAssignedCourse,
   fetchStudentAttendance,
+  fetchAbsentCount,
 };
